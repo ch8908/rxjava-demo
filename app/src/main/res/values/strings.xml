@@ -2,4 +2,8 @@
     <string name="app_name">RxJavaExample</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="distance_away">距離 %1$s 公尺</string>
+    <string name="toilet_id">編號：%1$s</string>
+    <string name="system_report_title">系統回報</string>
+    <string name="continue_title">繼續</string>
 </resources>
