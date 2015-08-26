@@ -12,12 +12,19 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.demo.rxjavaexample.app.BaseFragment;
 import com.demo.rxjavaexample.app.DemoApplication;
+import com.demo.rxjavaexample.model.ApiResponse;
 import com.demo.rxjavaexample.model.Toilet;
 import com.demo.rxjavaexample.retrofit.ApiService;
 import com.demo.rxjavaexample.view.ToiletAdapter;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import rx.Observable;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -64,12 +71,42 @@ public class MainActivityFragment extends BaseFragment {
         progressBar.setVisibility(View.VISIBLE);
         bind(fetchNearestToilet())
                 .finallyDo(() -> progressBar.setVisibility(View.GONE))
-                .subscribe(adapter::reset, throwable -> ViewHelper.showError(getActivity(), throwable));
+                .subscribe(adapter::reset,
+                        throwable -> ViewHelper.showError(getActivity(), throwable));
+//        fetchWithCallback();
+    }
+
+    private void fetchWithCallback() {
+        apiService.listToiletCallback(RID, SCOPE, 500, 0, new Callback<ApiResponse>() {
+            @Override
+            public void success(ApiResponse apiResponse, Response response) {
+                List<Toilet> filtered = new ArrayList<>();
+                for (Toilet toilet : apiResponse.getResult().getToilets()) {
+                    if (lessThan5Km(toilet)) {
+                        filtered.add(toilet);
+                    }
+                }
+                Collections.sort(filtered, new Comparator<Toilet>() {
+                    @Override
+                    public int compare(Toilet lhs, Toilet rhs) {
+                        return compareDistance(lhs, rhs);
+                    }
+                });
+                adapter.reset(filtered);
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                progressBar.setVisibility(View.GONE);
+                ViewHelper.showError(getActivity(), error);
+            }
+        });
     }
 
     private Observable<List<Toilet>> fetchNearestToilet() {
         return apiService.listToilet(RID, SCOPE, 500, 0)
-                .flatMap(apiResponse -> Observable.from(apiResponse.getResult().getToilets()))
+                .flatMap(response -> Observable.from(response.getResult().getToilets()))
                 .filter(this::lessThan5Km)
                 .toSortedList(this::compareDistance);
     }
