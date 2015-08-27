@@ -27,21 +27,8 @@ public class AccountDaemon {
     }
 
     private void checkAccount(Account account) throws IllegalArgumentException {
-        if (TextUtils.isEmpty(account.getEmail())
-                || TextUtils.isEmpty(account.getPassword())) {
+        if (TextUtils.isEmpty(account.getEmail()) || TextUtils.isEmpty(account.getPassword())) {
             throw new IllegalArgumentException("Email or password can not be empty.");
         }
-    }
-
-    public void fetchUserProfile() {
-        // code
-    }
-
-    public void fetchFriends() {
-        // code
-    }
-
-    public void fetchShippingInfo() {
-        // code
     }
 }

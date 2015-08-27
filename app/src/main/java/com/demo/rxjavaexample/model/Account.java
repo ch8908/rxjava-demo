@@ -7,14 +7,13 @@ public class Account {
     private final String email;
     private final String password;
 
+    public static Account createLoginAccount(final String email, final String password) {
+        return new Account(email, password);
+    }
+
     private Account(final String email, final String password) {
         this.email = email;
         this.password = password;
-    }
-
-    public static Account createLoginAccount(final String email,
-                                             final String password) {
-        return new Account(email, password);
     }
 
     public String getEmail() {

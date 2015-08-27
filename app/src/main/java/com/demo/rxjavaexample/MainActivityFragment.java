@@ -20,9 +20,6 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import rx.Observable;
-import rx.Scheduler;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -73,17 +70,17 @@ public class MainActivityFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         progressBar.setVisibility(View.VISIBLE);
 
-        fetchNearestToilet()
-                .observeOn(AndroidSchedulers.mainThread())
-                .finallyDo(() -> progressBar.setVisibility(View.GONE))
-                .subscribe(adapter::reset,
-                        throwable -> ViewHelper.showError(getActivity(), throwable));
+        // Callbacy way
+//        fetchNearestToilet()
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .finallyDo(() -> progressBar.setVisibility(View.GONE))
+//                .subscribe(adapter::reset,
+//                        throwable -> ViewHelper.showError(getActivity(), throwable));
 
         bind(fetchNearestToilet())
                 .finallyDo(() -> progressBar.setVisibility(View.GONE))
                 .subscribe(adapter::reset,
                         throwable -> ViewHelper.showError(getActivity(), throwable));
-//        fetchWithCallback();
     }
 
     private void fetchWithCallback() {
@@ -130,12 +127,12 @@ public class MainActivityFragment extends BaseFragment {
     }
 
     private int compareDistance(Toilet t1, Toilet t2) {
-        Location t1Location = new Location("t1");
+        Location t1Location = new Location(t1.getId());
         t1Location.setLatitude(Double.valueOf(t1.getLat()));
         t1Location.setLongitude(Double.valueOf(t1.getLng()));
         float t1Distance = myLocation.distanceTo(t1Location);
 
-        Location t2Location = new Location("t2");
+        Location t2Location = new Location(t2.getId());
         t2Location.setLatitude(Double.valueOf(t2.getLat()));
         t2Location.setLongitude(Double.valueOf(t2.getLng()));
         float t2Distance = myLocation.distanceTo(t2Location);

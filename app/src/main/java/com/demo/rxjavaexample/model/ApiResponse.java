@@ -7,7 +7,9 @@ import com.google.gson.annotations.SerializedName;
  */
 public class ApiResponse {
     @SerializedName("result")
-    private Result result;
+    private final Result result;
+
+    public ApiResponse(Result result) {this.result = result;}
 
     public Result getResult() {
         return result;
