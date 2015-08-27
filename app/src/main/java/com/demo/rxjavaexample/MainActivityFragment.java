@@ -20,6 +20,9 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import rx.Observable;
+import rx.Scheduler;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -69,6 +72,13 @@ public class MainActivityFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         progressBar.setVisibility(View.VISIBLE);
+
+        fetchNearestToilet()
+                .observeOn(AndroidSchedulers.mainThread())
+                .finallyDo(() -> progressBar.setVisibility(View.GONE))
+                .subscribe(adapter::reset,
+                        throwable -> ViewHelper.showError(getActivity(), throwable));
+
         bind(fetchNearestToilet())
                 .finallyDo(() -> progressBar.setVisibility(View.GONE))
                 .subscribe(adapter::reset,

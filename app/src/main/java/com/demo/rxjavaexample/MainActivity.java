@@ -1,13 +1,11 @@
 package com.demo.rxjavaexample;
 
-import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import com.demo.rxjavaexample.app.BaseActivity;
 import com.demo.rxjavaexample.app.DemoApplication;
-import com.demo.rxjavaexample.model.Toilet;
 import com.demo.rxjavaexample.retrofit.ApiService;
 import rx.Observable;
+import rx.subjects.PublishSubject;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -16,12 +14,15 @@ import java.util.List;
 public class MainActivity extends BaseActivity {
 
     @Inject ApiService apiService;
+    private PublishSubject<Object> subject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         DemoApplication.getInstance().getComponent().inject(this);
+        subject = PublishSubject.create();
+        list();
     }
 
     public void list() {
@@ -44,9 +45,14 @@ public class MainActivity extends BaseActivity {
         integers.add(6);
         integers.add(7);
         // ...
-        Observable.from(integers).map(integer -> {
-            System.out.println(">>>>>>>>>>>>>>>>>>> integer:" + integer);
-            return integer;
-        }).subscribe();
+        Observable.from(integers)
+                .map(integer -> integer + 10)
+                .subscribe(integer -> {
+                    System.out.println(">>>>>>>>>>>>>>>>>>> integer:" + integer);
+                });
+
+//        Observable.from(integers).subscribe(integer -> {
+//            System.out.println("111>>>>>>>>>>>>>>>>>>> integer:" + integer);
+//        });
     }
 }

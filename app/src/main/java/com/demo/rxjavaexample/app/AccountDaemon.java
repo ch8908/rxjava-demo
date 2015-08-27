@@ -32,4 +32,16 @@ public class AccountDaemon {
             throw new IllegalArgumentException("Email or password can not be empty.");
         }
     }
+
+    public void fetchUserProfile() {
+        // code
+    }
+
+    public void fetchFriends() {
+        // code
+    }
+
+    public void fetchShippingInfo() {
+        // code
+    }
 }
