@@ -1,14 +1,22 @@
 package com.demo.rxjavaexample.app;
 
 import android.text.TextUtils;
+import com.demo.rxjavaexample.event.AccountDaemonEvent;
 import com.demo.rxjavaexample.model.Account;
 import rx.Observable;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by Kros on 8/26/15.
  */
 public class AccountDaemon {
     public AccountDaemon() {
+    }
+
+    private PublishSubject<AccountDaemonEvent> subject;
+
+    public PublishSubject<AccountDaemonEvent> getSubject() {
+        return subject;
     }
 
     public Observable<Account> login(final Account account) {
