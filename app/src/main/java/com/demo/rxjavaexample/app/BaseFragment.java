@@ -1,8 +1,7 @@
 package com.demo.rxjavaexample.app;
 
+import com.trello.rxlifecycle.components.support.RxFragment;
 import rx.Observable;
-import rx.android.app.support.RxFragment;
-import rx.android.lifecycle.LifecycleObservable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -10,7 +9,7 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class BaseFragment extends RxFragment {
     protected <T> Observable<T> bind(Observable<T> observable) {
-        return LifecycleObservable.bindFragmentLifecycle(lifecycle(),
-                observable.observeOn(AndroidSchedulers.mainThread()));
+        return observable.compose(bindToLifecycle())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }
